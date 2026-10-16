@@ -6,12 +6,14 @@
 
 login: str = "test"
 password: str = "aaaaaaaa"
-email: str = "qq@qq.ru"
+email: str = None
 age = 18
 
 if login is not None and login.strip():
     if password is not None and (len(password.strip()) >= 8):
-        # Упрощаю проверку валидности емайл по @ и .
+        # Упрощаю проверку валидности емайл по @ и . при условии непустой строки
+        # Если срабатывает email is None, то email.strip() and ('@' not in email or '.' not in email)) не выполняется
+        # Если НЕ срабатывает email.strip(), то ('@' not in email or '.' not in email) не выполняется
         is_email_failed = (email is None or
             (email.strip() and ('@' not in email or '.' not in email)))
 
