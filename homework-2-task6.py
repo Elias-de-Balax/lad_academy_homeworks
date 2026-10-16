@@ -12,6 +12,7 @@ print(f"[1] -> bool([1]) -> {bool([1])}") # Непустой массив
 print(f"None -> bool(None) -> {bool(None)}")
 str_ = "{}"
 print(f"{str_} -> bool({str_}) -> {bool({})}")
+# Здесь ruff предлагает исправить {bool(False)} -> {False}, но сознательно не стал исправлять в рамках ДЗ
 print(f"False -> bool(False) -> {bool(False)}")
 
 # Проверка на логические ошибки
