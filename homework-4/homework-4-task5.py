@@ -6,9 +6,10 @@
 
 emails = ["alex_dev_2026@yandex.ru",
           "a.b.c@a.b.c.ru",
-          ".ivan.petrov@gmail.com",
+          ".ivan.ivanov@gmail.com",
           "user@@example.com",
-          "user-name@my-site.io"]
+          "user-name@my-site.io",
+          "example.com@example-.com"]
 
 phones = ["+7-999-123-12-22",
           "7-999-123-12-22",
@@ -43,6 +44,8 @@ def is_validated_email(email_: str) -> bool:
         return False
 
     special_chars = "-.+_"
+    allowed_name = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" + special_chars
+
     name, domain = email_.split("@")
 
     # Проверяем на наличие строки, длину не более 64 символов, вхождение спецсимволов в начале и в конце строки
@@ -53,15 +56,6 @@ def is_validated_email(email_: str) -> bool:
         ):
         return False
 
-    if (not len(domain)
-        or domain[0] in special_chars
-        or domain[-1] in special_chars
-        ):
-        return False
-
-    allowed_domain = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-"
-    allowed_name = allowed_domain + special_chars[1:]
-
     # Осуществляем проверку на вхождение в список разрешенных символов
     for char in name:
         if char not in allowed_name:
@@ -69,7 +63,6 @@ def is_validated_email(email_: str) -> bool:
 
     # Разбиваем домен на поддомены по точкам
     sub_domains = domain.split(".")
-
     # Проверяем на наличие не менее 2 частей домена и наличие только букв в домене верхнего уровня (не менее 2х)
     if ((2 > len(sub_domains))
         or (2 > len(sub_domains[-1]))
@@ -77,9 +70,10 @@ def is_validated_email(email_: str) -> bool:
         ):
         return False
 
+    allowed_domain = allowed_name[:-3]
     # Проверка на дефисы в начале и конце поддомена
     for sub_domain in sub_domains[:-1]:
-        if (not len(sub_domain) # Возможно, это лишнее после всех проверок выше, но подстраховываюсь
+        if (not len(sub_domain)
             or sub_domain.startswith("-")
             or sub_domain.endswith("-")
             ):
@@ -101,7 +95,7 @@ def is_validated_phone(phone_: str) -> bool:
             ):
             raise ValueError
 
-        # Проверяем на числовые значения 4 блока цифр
+        # Проверяем на числовые значения 4 блоков цифр
         if (not phone_[3:6].isdigit()
             or not phone_[7:10].isdigit()
             or not phone_[11:13].isdigit()
