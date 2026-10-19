@@ -6,7 +6,7 @@ input_str = "Аргентина манит негра!"
 
 str_ = "".join(input_str.split()).lower()
 
-for char in [',', '.', '-', '!', '?']:
+for char in ",.-!?": # Можно дополнить при необходимости
     str_ = str_.replace(char, '')
 
 print(f"Строка \"{input_str}\" {"" if str_ == str_[::-1] else "не "}является палиндромом")

@@ -4,7 +4,7 @@
 str_ = input("Введите строку: ")
 
 if str_:
-    for char in [',', '.', '-']:
+    for char in ",.-": # Можно дополнить при необходимости
         str_ = str_.replace(char, ' ')
 
     words = str_.split()

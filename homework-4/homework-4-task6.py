@@ -18,12 +18,12 @@ print()
 
 # Опасный вариант через format()
 for i in range(1, 6):
-    print("{} * {} = {}".format(i, n, i * n))
+    print("{} * {} = {}".format(i, n, i * n)) # ruff ругается на такую строку
 print()
 
 # безопасный вариант format(), но плохо читаемый
 for i in range(1, 6):
-    print("{i} * {n} = {i_n}".format(i = i, n = n, i_n = i * n))
+    print("{i} * {n} = {i_n}".format(i = i, n = n, i_n = i * n)) # ruff ругается на такую строку
 print()
 
 # Через f-строку яснее и проще

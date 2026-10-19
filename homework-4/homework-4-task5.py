@@ -4,12 +4,13 @@
    формате +7-XXX-XXX-XX-XX: разбить по - на 5 частей, первая равна +7, остальные — isdigit() и нужной длины (len).
    Вывести True/False для нескольких примеров."""
 
-emails = ["alex_dev_2026@yandex.ru",
-          "a.b.c@a.b.c.ru",
+emails = ["dev_2026@ya.ru",
+          "@a.b.c.ru",
           ".ivan.ivanov@gmail.com",
           "user@@example.com",
           "user-name@my-site.io",
-          "example.com@example-.com"]
+          "example.com@example-.com",
+          "qwerty.test@"]
 
 phones = ["+7-999-123-12-22",
           "7-999-123-12-22",
@@ -30,13 +31,13 @@ phones = ["+7-999-123-12-22",
 Доменная часть (после @)
 Состоит из меток (поддомен/домен), разделённых точками.
 Каждая метка: только латинские буквы, цифры и дефисы; не может начинаться или заканчиваться дефисом.
-В конце — домен верхнего уровня (TLD), например .com, .ru, .org.
+В конце — домен верхнего уровня, например .com, .ru, .org.
 Длина всего адреса: не более 254 символов.
 """
 
 def is_validated_email(email_: str) -> bool:
     # Проверяем на первичные признаки корректности
-    if (not len(email_)
+    if (not email_
         or (254 < len(email_))
         or (1 != email_.count("@"))
         or ".." in email_
@@ -49,7 +50,7 @@ def is_validated_email(email_: str) -> bool:
     name, domain = email_.split("@")
 
     # Проверяем на наличие строки, длину не более 64 символов, вхождение спецсимволов в начале и в конце строки
-    if (not len(name)
+    if (not name
         or (64 < len(name))
         or name[0] in special_chars
         or name[-1] in special_chars
@@ -73,7 +74,7 @@ def is_validated_email(email_: str) -> bool:
     allowed_domain = allowed_name[:-3]
     # Проверка на дефисы в начале и конце поддомена
     for sub_domain in sub_domains[:-1]:
-        if (not len(sub_domain)
+        if (not sub_domain
             or sub_domain.startswith("-")
             or sub_domain.endswith("-")
             ):
@@ -86,26 +87,23 @@ def is_validated_email(email_: str) -> bool:
     return True
 
 def is_validated_phone(phone_: str) -> bool:
-    try:
-        # формат +7-XXX-XXX-XX-XX
-        # Проверяем на первичные признаки корректности
-        if ((16 != len(phone_))
-            or (4 != phone_.count("-"))
-            or not phone_.startswith("+7-")
-            ):
-            raise ValueError
-
-        # Проверяем на числовые значения 4 блоков цифр
-        if (not phone_[3:6].isdigit()
-            or not phone_[7:10].isdigit()
-            or not phone_[11:13].isdigit()
-            or not phone_[14:15].isdigit()
-            ):
-            raise ValueError
-
-        return True
-    except ValueError:
+    # формат +7-XXX-XXX-XX-XX
+    # Проверяем на первичные признаки корректности
+    if ((16 != len(phone_))
+        or (4 != phone_.count("-"))
+        or not phone_.startswith("+7-")
+        ):
         return False
+
+    # Проверяем на числовые значения 4 блоков цифр
+    if (not phone_[3:6].isdigit()
+        or not phone_[7:10].isdigit()
+        or not phone_[11:13].isdigit()
+        or not phone_[14:15].isdigit()
+        ):
+        return False
+
+    return True
 
 for email in emails:
     print(f"Email {email} {"" if is_validated_email(email.strip()) else "не"}корректный")

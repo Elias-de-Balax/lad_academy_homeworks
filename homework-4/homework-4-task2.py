@@ -6,7 +6,7 @@
 str_ = input("Введите строку: ").strip()
 
 if str_:
-    for char in ['"', '{', '}', '(', ')']:
+    for char in "\"{}()": # Можно дополнить при необхродимости
         str_ = str_.replace(char, ' ')
 
     words = str_.split()
