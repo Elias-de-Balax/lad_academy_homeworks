@@ -10,8 +10,8 @@ from collections import OrderedDict
 #input_list = ["b", "a", "b", "c", "a"]
 input_list = ["uv", "python", "django", "python", "web", "python", "uv"]
 
-def get_ordered_list(list_: list) -> list:
-    return list(OrderedDict({value: None for value in list_}))
+def get_ordered_list(arg_list: list) -> list:
+    return list(OrderedDict({value: None for value in arg_list}))
 
 print("Список через set:", list(set(input_list)))
 print("Список через OrderedDict:", get_ordered_list(input_list))

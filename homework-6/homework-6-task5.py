@@ -16,9 +16,7 @@ for student in student_list:
     student_groups1[student[0]].append(student[2])
     student_groups2[student[0]].append(student[1])
 
-new_list = \
-    {key: (student_groups2.get(key, []), student_groups1.get(key, [])) \
-        for key in student_groups2.keys() and student_groups1.keys()}
+new_list = {key: (value, student_groups1.get(key, [])) for key, value in student_groups2.items()}
 
 #print(student_groups1)
 #print(student_groups2)
