@@ -10,6 +10,7 @@ from collections import OrderedDict
 #input_list = ["b", "a", "b", "c", "a"]
 input_list = ["uv", "python", "django", "python", "web", "python", "uv"]
 
+# arg_list может принимать разное содержимое списка одного типа данных, поэтому бывают сложности с наименованием
 def get_ordered_list(arg_list: list) -> list:
     return list(OrderedDict({value: None for value in arg_list}))
 
