@@ -74,12 +74,9 @@ def sort_articles_ex(article_list, **kwargs) -> list:
     bonus = kwargs.get("bonus", "views")
     reverse = kwargs.get("reverse", True)
 
-    if key.lower() in ["title", "author", "category", "rating", "views"]:
-        # Python сортирует по правилам лексикографического сравнения кортежей
-        # Сначала сортируются первые элементы, если они равны, то вторые
-        return sorted(article_list, key=lambda a: (a[key], a.get(bonus, 0)), reverse=reverse)
-    else:
-        raise TypeError("Неверно задано поле для сортировки.")
+    # Python сортирует по правилам лексикографического сравнения кортежей
+    # Сначала сортируются первые элементы, если они равны, то вторые
+    return sorted(article_list, key=lambda a: (a[key], a.get(bonus, 0)), reverse=reverse)
 
 for article in array_articles:
     try:
@@ -110,17 +107,18 @@ while True:
         case "3":
             find_keyword = input("Задайте слово(часть слова) для поиска: ")
 
-            print("Найденные статьи:")
+            print("\nНайденные статьи:")
             show_articles(find_articles(articles, find_keyword))
         case "4":
             sort_keyword = input("Задайте поле для сортировки (title/author/category/rating/views): ")
 
             try:
-                print(f"Сортировка по {sort_keyword}:")
+                print(f"\nСортировка по {sort_keyword}:")
                 show_articles(sort_articles(articles, key=sort_keyword))
             except TypeError as e:
                 print(e.__str__())
         case "5":
+            print("\nРасширенная сортировка по 2м полям:")
             show_articles(sort_articles_ex(articles, key="rating", reverse=True, bonus="views"))
         case "0":
             print("До свидания!")
