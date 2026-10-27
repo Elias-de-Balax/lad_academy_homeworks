@@ -12,10 +12,6 @@
     key="rating", reverse=True, bonus="views")) и умела сортировать по нескольким полям**: сначала по key, а при
     равенстве — по bonus. Используйте key=lambda a: (a[key], a.get(bonus, 0)) — объясните, почему кортеж из двух полей
     решает задачу вторичной сортировки.
-    (со звёздочкой, продвинутая). Коротко изучите по документации модуль functools (функции lru_cache, partial, wraps)
-    или базовое понятие рекурсии (функция, вызывающая саму себя, например, факториал или поиск по вложенному списку).
-    Опишите своими словами комментарием в коде, что вы выбрали и зачем, и приведите рабочий пример. Важно: декораторы
-    полноценно разбираются на занятии 9 — сейчас просто «познакомьтесь» и зафиксируйте наблюдение.
 """
 
 array_articles = [["Как установить uv", "", "Инструментарий", 4.8, 30],
@@ -59,7 +55,7 @@ def find_articles(article_list, query) -> list:
         return [article for article in article_list
                     #if ((-1 != article["title"].lower().find(query.lower()))
                     #    or (-1 != article["author"].lower().find(query.lower())))] # Что-то громоздко...
-                    if query.lower() in (article["title"] + article["author"]).lower()] # ????
+                    if query.lower() in (article["title"] + article["author"]).lower()] # Допустимо ли????
     else:
         return None
 
