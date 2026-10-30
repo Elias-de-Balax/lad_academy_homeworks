@@ -57,3 +57,5 @@ def save_posts(arg_file) -> None:
     if data._posts:
         with open(arg_file, "w", encoding="utf-8") as f:
             json.dump(data._posts, f, ensure_ascii=False, indent=2)
+
+# На всякий случай: Прямой доступ к data._posts лучше всего делать через get\set в рамках ООП

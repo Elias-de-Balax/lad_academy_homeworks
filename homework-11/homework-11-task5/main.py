@@ -9,8 +9,11 @@ from pathlib import Path
 from cli_blog import ui
 
 def main():
-    DATA_FILE = Path("data/cli_blog.json")
-    ui.load_posts(DATA_FILE)
+    print("Запуск программы из", Path.cwd())
+
+    Path("data").mkdir(exist_ok=True)
+    data_file = Path("data/cli_blog.json")
+    ui.load_posts(data_file)
 
     while True:
         print()
@@ -30,7 +33,7 @@ def main():
             case "3":
                 ui.find_post()
             case "0":
-                ui.save_posts(DATA_FILE)
+                ui.save_posts(data_file)
 
                 print("Работа завершена.")
                 break
@@ -38,7 +41,4 @@ def main():
                 print("Неизвестная команда.")
 
 if __name__ == "__main__":
-    print("Запуск программы из", Path.cwd())
-    Path("data").mkdir(exist_ok=True)
-
     main()
