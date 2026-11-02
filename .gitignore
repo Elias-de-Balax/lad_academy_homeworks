@@ -1,6 +1,8 @@
 __pycache__/
 *.py[cod]
 *.json
+*.txt
+*.csv
 .venv/
 .idea/
 .env
