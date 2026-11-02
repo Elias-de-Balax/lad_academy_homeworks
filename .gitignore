@@ -1,8 +1,6 @@
 __pycache__/
 *.py[cod]
+*.json
 .venv/
 .idea/
 .env
-/homework-11/homework-11-task5/data/cli_blog.json
-/homework-12/homework-12-task3/data/cli_blog.json
-/homework-12/homework-12-task4/data/cli_blog.json
