@@ -176,24 +176,31 @@ class Blog:
              "err_text": "Неподходящий тип данных тэга"}]
     })
     def posts_by_tag(self, tag: Tag | str) -> list[Post]:
-        filter_func = lambda post: tag in post.tags
-
-        if type(tag) is str:
-            filter_func = lambda post: tag in post.tag_titles
-
-        return list(filter(filter_func, self._posts))
+        return list(filter(lambda post: tag in post.tags, self._posts))
 
     @_check_params({
         "category": [
             {"predicate": lambda category: not category,
              "err_class": ValidationError,
              "err_text": "Категория не определена"},
-            {"predicate": lambda category: not type(category) is Category,
+            {"predicate": lambda category: not isinstance(category, (Category, str)), #not type(category) is Category,
              "err_class": TypeError,
              "err_text": "Неподходящий тип данных категории"}]
     })
-    def posts_by_category(self, category: Category) -> list[Post]:
+    def posts_by_category(self, category: Category | str) -> list[Post]:
         return list(filter(lambda post: category == post.category, self._posts))
+
+    @_check_params({
+        "author": [
+            {"predicate": lambda author: not author,
+             "err_class": ValidationError,
+             "err_text": "Категория не определена"},
+            {"predicate": lambda author: not isinstance(author, (Author, str)),
+             "err_class": TypeError,
+             "err_text": "Неподходящий тип данных категории"}]
+    })
+    def posts_by_author(self, author: Author | str) -> list[Post]:
+        return list(filter(lambda post: author == post.author, self._posts))
 
     def find_posts(self, text: str) -> list[Post]:
         return list(

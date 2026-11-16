@@ -68,17 +68,23 @@ def show_posts(posts: list[Post]) -> None:
 
 def find_posts(blog: Blog) -> None:
     print("\nПодменю:")
-    print("1. Поиск по тэгу")
-    print("2. Поиск по заголовку/содержанию")
+    print("1. Поиск по заголовку/содержанию")
+    print("2. Поиск по тэгу")
+    print("3. Поиск по автору")
+    print("4. Поиск по категории")
     print("0. Выход из подменю")
 
     while True:
         try:
             match input("\nВыберите действие в подменю: "):
                 case "1":
-                    show_posts(blog.posts_by_tag(input("Введите тэг для поиска статьи: ")))
-                case "2":
                     show_posts(blog.find_posts(input("Введите строку для поиска статьи: ")))
+                case "2":
+                    show_posts(blog.posts_by_tag(input("Введите тэг для поиска статьи: ")))
+                case "3":
+                    show_posts(blog.posts_by_author(input("Введите автора для поиска статьи: ")))
+                case "4":
+                    show_posts(blog.posts_by_category(input("Введите категорию для поиска статьи: ")))
                 case "0":
                     break
                 case _:
@@ -112,7 +118,7 @@ def main() -> None:
         print("2. Добавить Автора/Категорию/Тэг")
         print("3. Привязать тэги к статье")
         print("4. Показать статьи")
-        print("5. Найти статьи по заголовку/тексту, либо по тэгу")
+        print("5. Поиск статьи")
         print("0. Выход")
 
         try:

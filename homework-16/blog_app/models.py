@@ -31,11 +31,14 @@ class Author(PostMixin):
         if not self.name or not self.name.strip():
             raise ValueError("Имя автора не может быть пустым")
 
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, Author):
+    def __eq__(self, other: object | str) -> bool:
+        if not isinstance(other, (Author, str)):
             return NotImplemented
 
-        return self.name == other.name
+        if type(other) is str:
+            return self.name == other
+        else:
+            return self.name == other.name
 
     @override
     def add_post(self, post: Post) -> None:
@@ -53,11 +56,14 @@ class Category(PostMixin):
         if not self.title or not self.title.strip():
             raise ValueError("Название категории не может быть пустым")
 
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, Category):
+    def __eq__(self, other: object | str) -> bool:
+        if not isinstance(other, (Category, str)):
             return NotImplemented
 
-        return self.title == other.title
+        if type(other) is str:
+            return self.title == other
+        else:
+            return self.title == other.title
 
     @override
     def add_post(self, post: Post) -> None:
@@ -75,11 +81,14 @@ class Tag(PostMixin):
         if not self.title or not self.title.strip():
             raise ValueError("Название тэга не может быть пустым")
 
-    def __eq__(self, other: object) -> bool:
-        if not isinstance(other, Tag):
+    def __eq__(self, other: object | str) -> bool:
+        if not isinstance(other, (Tag, str)):
             return NotImplemented
 
-        return self.title == other.title
+        if type(other) is str:
+            return self.title == other
+        else:
+            return self.title == other.title
 
 
 @dataclass
