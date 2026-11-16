@@ -27,7 +27,7 @@ def create_post(blog: Blog) -> None:
         category = blog.add_category(data[3])
         blog.create_post(data[0], data[1], author, category)
     except IndexError:
-        print(f"Ошибка: Статья задана в неверном формате")
+        print("Ошибка: Статья задана в неверном формате")
     else:
         print("Статья добавлена в список успешно")
 
@@ -42,7 +42,7 @@ def add_objects(blog: Blog) -> None:
         try:
             match input("\nВыберите действие в подменю: "):
                 case "1":
-                   blog.add_author(input("Введите автора: "))
+                    blog.add_author(input("Введите автора: "))
                 case "2":
                     blog.add_category(input("Введите категорию: "))
                 case "3":

@@ -86,35 +86,29 @@ class Blog:
         return self._posts.copy()
 
     def add_author(self, name: str) -> Author:
-        author_list = [author.name for author in self._authors]
-
-        if not name in author_list:
+        if not name in self._authors:
             author = Author(self._new_id(Author.__name__), name)
             self._authors.append(author)
         else:
-            author = self._authors[author_list.index(name)]
+            author = self._authors[self._authors.index(name)] # работает из-за измененного __eq__, но IDE предупреждает
 
         return author
 
     def add_category(self, title: str) -> Category:
-        category_list = [category.title for category in self._categories]
-
-        if not title in category_list:
+        if not title in self._categories:
             category = Category(self._new_id(Category.__name__), title)
             self._categories.append(category)
         else:
-            category = self._categories[category_list.index(title)]
+            category = self._categories[self._categories.index(title)]
 
         return category
 
     def add_tag(self, title: str) -> Tag:
-        tag_list = [tag.title for tag in self._tags]
-
-        if not title in tag_list:
+        if not title in self._tags:
             tag = Tag(self._new_id(Tag.__name__), title)
             self._tags.append(tag)
         else:
-            tag = self._tags[tag_list.index(title)]
+            tag = self._tags[self._tags.index(title)]
 
         return tag
 
