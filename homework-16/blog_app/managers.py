@@ -5,6 +5,7 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Self, Any
+from unicodedata import category
 
 from blog_app.errors import DuplicateError, ParameterNotFoundError, ValidationError
 from blog_app.models import Author, Category, Tag, Post
@@ -183,6 +184,18 @@ class Blog:
             filter_func = lambda post: tag in post.tag_titles
 
         return list(filter(filter_func, self._posts))
+
+    @_check_params({
+        "category": [
+            {"predicate": lambda category: not category,
+             "err_class": ValidationError,
+             "err_text": "Категория не определена"},
+            {"predicate": lambda category: not type(category) is Category,
+             "err_class": TypeError,
+             "err_text": "Неподходящий тип данных категории"}]
+    })
+    def posts_by_category(self, category: Category) -> list[Post]:
+        return list(filter(lambda post: category == post.category, self._posts))
 
     def find_posts(self, text: str) -> list[Post]:
         return list(

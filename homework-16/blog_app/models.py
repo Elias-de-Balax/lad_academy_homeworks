@@ -3,8 +3,18 @@ from datetime import datetime
 
 from blog_app.errors import DuplicateError
 
+class PostMixin:
+    _posts: list[Post] = field(default_factory=list)
+
+    @property
+    def posts(self) -> list[Post]:
+        return self._posts.copy()
+
+    #def add_post(self, post: Post) -> None:
+
+
 @dataclass
-class Author:
+class Author(PostMixin):
     id: int
     name: str
     _posts: list[Post] = field(default_factory=list)
@@ -32,6 +42,12 @@ class Category:
     def __post_init__(self) -> None:
         if not self.title or not self.title.strip():
             raise ValueError("Название категории не может быть пустым")
+
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, Category):
+            return NotImplemented
+
+        return self.title == other.title
 
     @property
     def posts(self) -> list[Post]:
