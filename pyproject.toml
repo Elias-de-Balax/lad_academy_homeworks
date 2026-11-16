@@ -3,6 +3,7 @@ name = "lad-academy-homeworks"
 version = "0.1.0"
 requires-python = ">=3.15"
 dependencies = [
+    "mypy>=2.4.1",
     "rich>=15.0.0",
     "ruff>=0.17.1",
 ]
