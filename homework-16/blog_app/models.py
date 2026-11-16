@@ -9,7 +9,7 @@ class Author:
     name: str
     _posts: list[Post] = field(default_factory=list)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         if not self.name or not self.name.strip():
             raise ValueError("Имя автора не может быть пустым")
 
@@ -29,7 +29,7 @@ class Category:
     title: str
     _posts: list[Post] = field(default_factory=list)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         if not self.title or not self.title.strip():
             raise ValueError("Название категории не может быть пустым")
 
@@ -49,7 +49,7 @@ class Tag:
     title: str
     _posts: list[Post] = field(default_factory=list)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         if not self.title or not self.title.strip():
             raise ValueError("Название тэга не может быть пустым")
 
@@ -75,14 +75,17 @@ class Post:
     content: str
     author: Author
     category: Category
-    created_at = datetime.now().strftime("%d.%m.%y %H:%M:%S")
     _tags: list[Tag] = field(default_factory=list)
+    created_at = datetime.now().strftime("%d.%m.%y %H:%M:%S")
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         if not self.title or not self.title.strip():
             raise ValueError("Заголовок статьи не может быть пустым")
         if not self.content or not self.content.strip():
             raise ValueError("Содержание статьи не может быть пустым")
+
+    def __str__(self) -> str:
+        return f"{self.title:20s} | {self.author.name:20s} | {self.category.title:20s}"
 
     @property
     def tag_titles(self) -> list[str]:
@@ -97,4 +100,7 @@ class Post:
             self._tags.append(tag)
             tag.add_post(self)
         else:
-            raise DuplicateError
+            raise DuplicateError("Тэг уже в списке тэгов к статье")
+
+if __name__ == "__main__":
+    print(Post.__dict__)

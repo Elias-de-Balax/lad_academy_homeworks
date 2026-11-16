@@ -2,11 +2,11 @@ import functools
 import inspect
 import json
 
-from dataclasses import dataclass#, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Self, Any
 
-from blog_app.errors import DuplicateError, ParameterNotFoundError
+from blog_app.errors import DuplicateError, ParameterNotFoundError, ValidationError
 from blog_app.models import Author, Category, Tag, Post
 
 # класс Blog создан по паттерну Синглтон с переопределением __new__ и __init__
@@ -15,11 +15,6 @@ from blog_app.models import Author, Category, Tag, Post
 class Blog:
     _instance = None
     _initialized = False
-
-#    _authors: list[Author] = field(default_factory=list)
-#    _categories: list[Category] = field(default_factory=list)
-#    _tags: list[Tag] = field(default_factory=list)
-#    _posts: list[Post] = field(default_factory=list)
 
     _next_ids = {Author.__name__: 1,
                  Category.__name__: 1,
@@ -50,6 +45,7 @@ class Blog:
 
         return new_id
 
+    # Сделал для себя для понимания работы декоратора, проверяющего входные параметры функции
     @staticmethod
     def _check_params(rules: dict[str, list[dict[str, Any]]]):
         def decorator(func):
@@ -74,10 +70,6 @@ class Blog:
             return wrapper
         return decorator
 
-    @staticmethod
-    def is_valid_text(text) -> bool:
-        return isinstance(text, str) and bool(text.strip())
-
     @property
     def authors(self) -> list[Author]:
         return self._authors.copy()
@@ -94,7 +86,7 @@ class Blog:
     def posts(self) -> list[Post]:
         return self._posts.copy()
 
-    def add_author(self, name: str) -> Author | None:
+    def add_author(self, name: str) -> Author:
         author_list = [author.name for author in self._authors]
 
         if not name in author_list:
@@ -105,7 +97,7 @@ class Blog:
 
         return author
 
-    def add_category(self, title: str) -> Category | None:
+    def add_category(self, title: str) -> Category:
         category_list = [category.title for category in self._categories]
 
         if not title in category_list:
@@ -116,7 +108,7 @@ class Blog:
 
         return category
 
-    def add_tag(self, title: str) -> Tag | None:
+    def add_tag(self, title: str) -> Tag:
         tag_list = [tag.title for tag in self._tags]
 
         if not title in tag_list:
@@ -129,13 +121,13 @@ class Blog:
 
     @_check_params({
         "author": [
-            {"predicate": lambda author: not author, "err_class": ValueError, "err_text": "Автор поста не определен"},
+            {"predicate": lambda author: not author, "err_class": ValidationError, "err_text": "Автор поста не определен"},
             {"predicate": lambda author: not type(author) is Author,
              "err_class": TypeError,
              "err_text": "Неподходящий тип данных автора поста"}],
         "category": [
             {"predicate": lambda category: not category,
-             "err_class": ValueError,
+             "err_class": ValidationError,
              "err_text": "Категория поста не определена"},
             {"predicate": lambda category: not type(category) is Category,
              "err_class": TypeError,
@@ -156,17 +148,20 @@ class Blog:
 
     @_check_params({
         "tag": [
-            {"predicate": lambda tag: not tag, "err_class": ValueError, "err_text": "Тэг не определен"},
-            {"predicate": lambda tag: not type(tag) is Tag,
+            {"predicate": lambda tag: not tag, "err_class": ValidationError, "err_text": "Тэг не определен"},
+            {"predicate": lambda tag: not isinstance(tag, (Tag, str)),
              "err_class": TypeError,
              "err_text": "Неподходящий тип данных тэга"}],
         "post": [
-            {"predicate": lambda post: not post, "err_class": ValueError, "err_text": "Статья не определена"},
+            {"predicate": lambda post: not post, "err_class": ValidationError, "err_text": "Статья не определена"},
             {"predicate": lambda post: not type(post) is Post,
              "err_class": TypeError,
              "err_text": "Неподходящий тип данных статьи"}]
     })
-    def add_tag_to_post(self, post: Post, tag: Tag) -> bool:
+    def add_tag_to_post(self, post: Post, tag: Tag | str) -> bool:
+        if type(tag) is str:
+            tag = self.add_tag(tag)
+
         try:
             post.add_tag(tag)
         except DuplicateError:
@@ -176,31 +171,23 @@ class Blog:
 
     @_check_params({
         "tag": [
-            {"predicate": lambda tag: not tag, "err_class": ValueError, "err_text": "Тэг не определен"},
+            {"predicate": lambda tag: not tag, "err_class": ValidationError, "err_text": "Тэг не определен"},
             {"predicate": lambda tag: not isinstance(tag, (Tag, str)),
              "err_class": TypeError,
              "err_text": "Неподходящий тип данных тэга"}]
     })
-    def post_by_tag(self, tag: Tag) -> filter:
-        filter_func = lambda post: post.tag == tag
+    def posts_by_tag(self, tag: Tag | str) -> list[Post]:
+        filter_func = lambda post: tag in post.tags
 
         if type(tag) is str:
-            filter_func = lambda post: post.tag.title == tag
+            filter_func = lambda post: tag in post.tag_titles
 
-        return filter(filter_func, self._posts)
+        return list(filter(filter_func, self._posts))
 
-    @_check_params({
-        "post": [
-            {"predicate": lambda post: not post, "err_class": ValueError, "err_text": "Статья не определена"},
-            {"predicate": lambda post: not type(post) is Post,
-             "err_class": TypeError,
-             "err_text": "Неподходящий тип данных статьи"}]
-    })
-    def tags_of_post(self, post: Post) -> filter:
-        return filter(lambda tag: tag in post.tags, self._posts)
-
-    def find_posts(self, text: str) -> filter:
-        return filter(lambda post: text.lower() in (post.title+" "+post.content).lower(), self._posts)
+    def find_posts(self, text: str) -> list[Post]:
+        return list(
+            filter(lambda post: text.lower() in (post.title+" "+post.content).lower(), self._posts)
+        )
 
     @classmethod
     def load(cls, arg_file: Path) -> Blog:
@@ -225,7 +212,7 @@ class Blog:
                 post_data["title"],
                 post_data["content"],
                 authors[post_data["author_id"]],
-                categories[post_data["category_id"]],
+                categories[post_data["category_id"]]
             )
             authors[post_data["author_id"]].add_post(post)
             categories[post_data["category_id"]].add_post(post)
