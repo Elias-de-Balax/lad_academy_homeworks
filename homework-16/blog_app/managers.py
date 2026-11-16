@@ -5,13 +5,11 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Self, Any
-from unicodedata import category
 
 from blog_app.errors import DuplicateError, ParameterNotFoundError, ValidationError
 from blog_app.models import Author, Category, Tag, Post
 
 # класс Blog создан по паттерну Синглтон с переопределением __new__ и __init__
-
 @dataclass
 class Blog:
     _instance = None
@@ -227,6 +225,7 @@ class Blog:
                 authors[post_data["author_id"]],
                 categories[post_data["category_id"]]
             )
+
             authors[post_data["author_id"]].add_post(post)
             categories[post_data["category_id"]].add_post(post)
             for tag_id in post_data["tag_ids"]:

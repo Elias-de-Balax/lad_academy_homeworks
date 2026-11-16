@@ -16,7 +16,8 @@ create-post, add-tag-to-post, show, search <категория>, save, load, qui
 
 from pathlib import Path
 
-from blog_app.managers import Blog, Post
+from blog_app.managers import Blog
+from blog_app.models import Post
 
 def create_post(blog: Blog) -> None:
     data = input("Добавьте статью в формате \"Заголовок;Текст;Автор;Категория\": ").split(";")
