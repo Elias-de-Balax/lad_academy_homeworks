@@ -76,9 +76,9 @@ def find_posts(blog: Blog) -> None:
         try:
             match input("\nВыберите действие в подменю: "):
                 case "1":
-                    show_posts(blog.posts_by_tag(input("Введите тэг для поиска: ")))
+                    show_posts(blog.posts_by_tag(input("Введите тэг для поиска статьи: ")))
                 case "2":
-                    show_posts(blog.find_posts(input("Введите строку для поиска: ")))
+                    show_posts(blog.find_posts(input("Введите строку для поиска статьи: ")))
                 case "0":
                     break
                 case _:
